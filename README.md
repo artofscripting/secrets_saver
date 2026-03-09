@@ -38,8 +38,8 @@ pip install cryptography sqlalchemy pyodbc
 ```python
 from secrets_saver import SecretsSaver
 
-# Will prompt for a key if secrets.db doesn't exist or upon first access
-db = SecretsSaver("secrets.db")
+# Prompts for the master key securely on first access.
+db = SecretsSaver("secrets.ep")
 
 # Store a secret
 db.set_secret("api_token", "super_secret_value")
@@ -60,6 +60,7 @@ Pass a standard SQLAlchemy connection string via `db_url`.
 from secrets_saver import SecretsSaver
 
 db_url = "postgresql+psycopg2://admin:password@localhost:5432/my_database"
+# Prompts for the master key; do not hardcode it in source.
 db = SecretsSaver(db_url=db_url)
 
 db.set_secret("db_password", "my_postgres_secret")
@@ -74,6 +75,7 @@ Pass the MSSQL connection string. Be sure the ODBC driver specified matches what
 from secrets_saver import SecretsSaver
 
 db_url = "mssql+pyodbc://admin:password@localhost/my_database?driver=ODBC+Driver+17+for+SQL+Server"
+# Prompts for the master key; do not hardcode it in source.
 db = SecretsSaver(db_url=db_url)
 
 db.set_secret("api_key", "my_mssql_secret")
@@ -82,10 +84,11 @@ print(db.get_secret("api_key"))
 
 ## API Reference
 
-### `SecretsSaver(filename="secrets.db", db_url=None)`
+### `SecretsSaver(filename="secrets.ep", db_url=None)`
 Initializes the class. If `db_url` is provided, it attempts to connect to the SQL database using SQLAlchemy, automatically creating an `encrypted_secrets` table if it does not exist. Otherwise, it defaults to the local file `filename`.
 
 *   **`set_secret(key: str, value: str)`**: Encrypts and saves a key-value pair to the database.
 *   **`get_secret(key: str) -> str`**: Decrypts and retrieves the value for the given key. Returns `None` if the key does not exist.
 *   **`list_secrets() -> list`**: Returns a list of all secret keys stored.
 *   **`clear_database()`**: Deletes all secrets in the current database/file and overwrites the storage with an empty encrypted payload.
+

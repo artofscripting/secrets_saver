@@ -14,12 +14,9 @@ except ImportError:
     pass
 
 class SecretsSaver:
-    def __init__(self, filename="secrets.db", db_url: Optional[str] = None):
+    def __init__(self, filename="secrets.ep", db_url: Optional[str] = None):
         """
         Initialize the SecretsSaver.
-        Provide db_url to use a remote database (e.g., PostgreSQL or MSSQL).
-        Example: db_url="postgresql+psycopg2://user:password@localhost:5432/mydb"
-                 db_url="mssql+pyodbc://user:password@localhost/mydb?driver=ODBC+Driver+17+for+SQL+Server"
         """
         self.filename = filename
         self.db_url = db_url
@@ -174,4 +171,5 @@ class SecretsSaver:
     def clear_database(self):
         self._data = {}
         self._save()
+
 
